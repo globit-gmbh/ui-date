@@ -84,7 +84,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  function dateToString(uiDateFormat, value) {
 	    if (uiDateFormat === 'notz') {
-	      uiDateFormat = uiDateFormatConfig;
+	      return value.getTime();
 	    }
 	    var dateFormat = uiDateFormat || uiDateFormatConfig;
 	    if (value) {
@@ -121,7 +121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (_angular2.default.isString(valueToParse)) {
 	      if (dateFormat) {
 	        if (dateFormat === 'notz') {
-	          dateFormat = '';
+	          dateFormat = '@';
 	          return removeTimezone(_jquery2.default.datepicker.parseDate(dateFormat, valueToParse));
 	        } else {
 	          return _jquery2.default.datepicker.parseDate(dateFormat, valueToParse);

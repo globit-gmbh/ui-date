@@ -13,8 +13,8 @@ export default angular.module('ui.date', [])
 
     function dateToString(uiDateFormat, value) {
       if (uiDateFormat === 'notz') {
-        uiDateFormat = uiDateFormatConfig;
-      }
+        return value.getTime();
+	    }
       var dateFormat = uiDateFormat || uiDateFormatConfig;
       if (value) {
         if (dateFormat) {
@@ -35,8 +35,8 @@ export default angular.module('ui.date', [])
 
     function stringToDate(dateFormat, valueToParse) {
       function removeTimezone(date) {
-        return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-      }
+	      return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+	    }
 
       dateFormat = dateFormat || uiDateFormatConfig;
 
@@ -51,7 +51,7 @@ export default angular.module('ui.date', [])
       if (angular.isString(valueToParse)) {
         if (dateFormat) {
           if (dateFormat === 'notz') {
-            dateFormat = '';
+            dateFormat = '@';
             return removeTimezone(jQuery.datepicker.parseDate(dateFormat, valueToParse));
           } else {
             return jQuery.datepicker.parseDate(dateFormat, valueToParse);
