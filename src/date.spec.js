@@ -556,6 +556,23 @@ describe('uiDateFormat', function() {
     });
   });
 
+  describe('$parsing with notz', function() {
+    it('should format a selected date correctly to an ISO string and recalculating the timezone', function() {
+      inject(function($compile, $rootScope) {
+        var aDate = new Date(Date.UTC(2012, 8, 17));
+        var aDateString = aDate.toISOString();
+        var element = $compile('<input ui-date-format="notz" ng-model="x"/>')($rootScope);
+        $rootScope.$digest();
+
+        element.controller('ngModel').$setViewValue(aDate);
+        // Check that the model is updated correctly
+        expect($rootScope.x).toEqual(aDateString);
+        // Check that the $viewValue has not been altered
+        expect(element.controller('ngModel').$viewValue).toEqual(aDate);
+      });
+    });
+  });
+
   describe('with uiDateConfig', function() {
     var element, scope;
 

@@ -12,6 +12,9 @@ export default angular.module('ui.date', [])
     };
 
     function dateToString(uiDateFormat, value) {
+      if (uiDateFormat === 'notz') {
+        uiDateFormat = uiDateFormatConfig;
+      }
       var dateFormat = uiDateFormat || uiDateFormatConfig;
       if (value) {
         if (dateFormat) {
@@ -31,25 +34,45 @@ export default angular.module('ui.date', [])
     }
 
     function stringToDate(dateFormat, valueToParse) {
+      function removeTimezone(date) {
+        return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+      }
+
       dateFormat = dateFormat || uiDateFormatConfig;
 
       if (angular.isDate(valueToParse) && !isNaN(valueToParse)) {
-        return valueToParse;
+        if (dateFormat === 'notz') {
+          return removeTimezone(valueToParse);
+        } else {
+          return valueToParse;
+        }
       }
 
       if (angular.isString(valueToParse)) {
         if (dateFormat) {
-          return jQuery.datepicker.parseDate(dateFormat, valueToParse);
+          if (dateFormat === 'notz') {
+            dateFormat = '';
+            return removeTimezone(jQuery.datepicker.parseDate(dateFormat, valueToParse));
+          } else {
+            return jQuery.datepicker.parseDate(dateFormat, valueToParse);
+          }
         }
 
         var isoDate = new Date(valueToParse);
-        return isNaN(isoDate.getTime()) ? null : isoDate;
-
+        if (dateFormat === 'notz') {
+          return isNaN(isoDate.getTime()) ? null : removeTimezone(isoDate);
+        } else {
+          return isNaN(isoDate.getTime()) ? null : isoDate;
+        }
       }
 
       if (angular.isNumber(valueToParse)) {
         // presumably timestamp to date object
-        return new Date(valueToParse);
+        if (dateFormat === 'notz') {
+          return removeTimezone(new Date(valueToParse));
+        } else {
+          return new Date(valueToParse);
+        }
       }
 
       return null;
